@@ -39,7 +39,7 @@ defmodule AdventOfCode.Solution.Year2023.Day07 do
     compare_in_order(rest1, rest2)
   end
 
-  def compare_in_order([c1 | rest1], [c2 | rest2]) do
+  def compare_in_order([c1 | _], [c2 | _]) do
     @cards_rank[c1] >
       @cards_rank[c2]
   end
