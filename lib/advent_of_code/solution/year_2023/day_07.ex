@@ -1,5 +1,5 @@
 defmodule AdventOfCode.Solution.Year2023.Day07 do
-  @cards_rank String.to_charlist("AKQJT98765432")
+  @cards_rank String.to_charlist("AKQT98765432J")
               |> Enum.reverse()
               |> Enum.with_index()
               |> Enum.into(%{})
@@ -10,10 +10,16 @@ defmodule AdventOfCode.Solution.Year2023.Day07 do
     |> ranked
   end
 
-  def ranked(hands) do
+  def part2(input) do
+    String.split(input, "\n", trim: true)
+    |> Enum.map(&String.split(&1, " ", trim: true))
+    |> ranked(true)
+  end
+
+  def ranked(hands, joker \\ false) do
     hands
     |> Enum.map(fn [card, score] ->
-      {card, card_to_points(card), score}
+      {card, card_to_points(card, joker), score}
     end)
     |> Enum.sort(fn {card1, points1, _}, {card2, points2, _} ->
       if points1 == points2 do
@@ -28,9 +34,6 @@ defmodule AdventOfCode.Solution.Year2023.Day07 do
       String.to_integer(score) * (idx + 1)
     end)
     |> Enum.sum()
-  end
-
-  def part2(_input) do
   end
 
   def compare_in_order([], []), do: true
@@ -48,10 +51,29 @@ defmodule AdventOfCode.Solution.Year2023.Day07 do
     compare_in_order(card1 |> String.to_charlist(), card2 |> String.to_charlist())
   end
 
-  def card_to_points(card) do
-    case card
-         |> String.split("", trim: true)
-         |> Enum.frequencies()
+  def card_to_points(card, joker) do
+    freqs =
+      String.split(card, "", trim: true)
+      |> Enum.frequencies()
+
+    freqs =
+      if joker && freqs["J"] do
+        {c, f} = Map.pop(freqs, "J")
+
+        if c == 5 do
+          %{"A" => 5}
+        else
+          {k, v} =
+            Enum.sort_by(f, &elem(&1, 1), :desc)
+            |> hd
+
+          Map.put(f, k, v + c)
+        end
+      else
+        freqs
+      end
+
+    case freqs
          |> Map.values()
          |> Enum.sort(:desc) do
       [5 | _] -> 10
