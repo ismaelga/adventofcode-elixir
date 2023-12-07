@@ -7,17 +7,6 @@ defmodule AdventOfCode.Solution.Year2023.Day03 do
 
     valid_coords = parts_coords(lines)
 
-    numbers = number_coords(lines)
-
-    # valid_coords
-    # |> Enum.map(fn {x, y} = coord ->
-    #   {y, numbers |> Map.get(coord)}
-    # end)
-    # |> Enum.reject(fn {_, n} -> is_nil(n) end)
-    # |> Enum.uniq()
-    # |> Enum.map(&elem(&1, 1))
-    # |> Enum.sum()
-
     for {line, i} <- input |> String.split("\n", trim: true) |> Enum.with_index(),
         [{start, len}] <- Regex.scan(~r'\d+', line, return: :index),
         Enum.any?(start..(start + len - 1), fn j -> {i, j} in valid_coords end) do
