@@ -6,15 +6,19 @@ defmodule AdventOfCode.Solution.Year2023.Day08Test do
   setup do
     [
       input: """
+      LLR
+
+      AAA = (BBB, BBB)
+      BBB = (AAA, ZZZ)
+      ZZZ = (ZZZ, ZZZ)
       """
     ]
   end
 
-  @tag :skip
   test "part1", %{input: input} do
     result = part1(input)
 
-    assert result
+    assert result == 6
   end
 
   @tag :skip
